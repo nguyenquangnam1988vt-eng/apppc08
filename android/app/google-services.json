@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1028882250122",
+    "firebase_url": "https://tuantrapc08-default-rtdb.firebaseio.com",
+    "project_id": "tuantrapc08",
+    "storage_bucket": "tuantrapc08.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1028882250122:android:551b2d705d06778b1d7073",
+        "android_client_info": {
+          "package_name": "com.example.app7"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWl-igoiwfP8PWF1Aw0jJQVrX9Q8a_cjw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

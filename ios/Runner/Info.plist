@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Các cấu hình mặc định của Flutter giữ nguyên ở đây... -->
+
+    <!-- 1. QUYỀN VỊ TRÍ KHI MỞ APP -->
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Ứng dụng cần truy cập vị trí của bạn để hiển thị Marker trên bản đồ thời gian thực.</string>
+
+    <!-- 2. QUYỀN VỊ TRÍ KHI CHẠY NGẦM -->
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Ứng dụng cần theo dõi vị trí trong nền để cập nhật liên tục cho những người dùng khác.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Ứng dụng cần quyền vị trí mọi lúc để theo dõi hành trình liên tục.</string>
+
+    <!-- 3. CẤU HÌNH CHO PHÉP APP HOẠT ĐỘNG BACKGROUND -->
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>location</string>
+        <string>fetch</string>
+    </array>
+</dict>
+</plist>
