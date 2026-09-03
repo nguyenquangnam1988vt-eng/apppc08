@@ -1,0 +1,30 @@
+workflows:
+  ios-release:
+    name: iOS Release Build
+    environment:
+      groups:
+        - firebase_credentials
+      flutter: stable
+      xcode: latest
+    scripts:
+      - name: Clean and get dependencies
+        script: |
+          flutter clean
+          flutter pub get
+
+      - name: Create GoogleService-Info.plist from secret
+        script: |
+          echo "$IOS_FIREBASE_SECRET" | base64 --decode > ios/Runner/GoogleService-Info.plist
+
+      - name: Install CocoaPods
+        script: |
+          cd ios
+          pod install --repo-update
+
+      - name: Build iOS IPA
+        script: |
+          flutter build ipa --release --no-codesign
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - build/ios/archive/Runner.xcarchive
