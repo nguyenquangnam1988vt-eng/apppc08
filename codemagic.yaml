@@ -1,44 +1,72 @@
 workflows:
   release-build:
-    name: Release Build (iOS & Android)
+    name: Release Build (iOS)
 
     environment:
       groups:
         - firebase_credentials
-      flutter: stable
-      xcode: latest
-      cocoapods: default
+
+      flutter: 3.47.2
+      xcode: 26.4
+      cocoapods: 1.16.2
 
     scripts:
+
       - name: Show build environment
         script: |
+          echo "===== FLUTTER ====="
           flutter --version
+
+          echo "===== DART ====="
+          dart --version
+
+          echo "===== XCODE ====="
           xcodebuild -version
+
+          echo "===== COCOAPODS ====="
           pod --version
 
-      - name: Deep clean and prepare
+      - name: Deep clean
         script: |
           flutter clean
-          rm -rf ios/Pods ios/Podfile.lock ios/.symlinks
-          rm -rf ios/Flutter/Flutter.podspec
+
+          rm -rf ios/Pods
+          rm -f ios/Podfile.lock
+          rm -rf ios/.symlinks
+          rm -rf ios/Flutter/ephemeral
+
+          rm -rf ~/Library/Developer/Xcode/DerivedData/*
+
+      - name: Get Flutter dependencies
+        script: |
           flutter pub get
 
       - name: Create GoogleService-Info.plist
         script: |
-          printf '%s\n' "$IOS_FIREBASE_SECRET" > ios/Runner/GoogleService-Info.plist
+          printf '%s\n' "$IOS_FIREBASE_SECRET" \
+            > ios/Runner/GoogleService-Info.plist
 
-      - name: Use static Podfile (disable SPM)
+      - name: Install CocoaPods
         script: |
-          # Đảm bảo Podfile đã tồn tại trong repo (không xóa nó)
-          # Nếu cần, có thể copy từ file mẫu
-          cp ios/Podfile ios/Podfile.bak  # backup
-          # Sửa lại nếu cần
-          sed -i '' 's/use_frameworks!/use_frameworks! :linkage => :static/g' ios/Podfile
           cd ios
-          pod deintegrate
-          rm -rf Pods Podfile.lock
+
+          rm -rf Pods
+          rm -f Podfile.lock
+
           pod install --repo-update
+
           cd ..
+
+      - name: Verify CocoaPods
+        script: |
+          echo "===== PODFILE.LOCK ====="
+          test -f ios/Podfile.lock && echo "Podfile.lock OK"
+
+          echo "===== MANIFEST.LOCK ====="
+          test -f ios/Pods/Manifest.lock && echo "Manifest.lock OK"
+
+          echo "===== PATH PROVIDER ====="
+          grep -A 5 -B 2 "path_provider_foundation" ios/Podfile.lock || true
 
       - name: Build iOS IPA
         script: |
