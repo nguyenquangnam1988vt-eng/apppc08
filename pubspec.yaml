@@ -1,4 +1,4 @@
-name: location_tracker
+name: app7
 description: A real-time location tracking application.
 publish_to: 'none'
 version: 1.0.0+1
