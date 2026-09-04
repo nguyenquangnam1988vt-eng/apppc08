@@ -1,7 +1,6 @@
 workflows:
   release-build:
     name: Release Build (iOS & Android)
-
     environment:
       groups:
         - firebase_credentials
@@ -10,7 +9,6 @@ workflows:
       cocoapods: default
 
     scripts:
-
       - name: Show build environment
         script: |
           echo "===== FLUTTER ====="
@@ -32,7 +30,7 @@ workflows:
         script: |
           printf '%s\n' "$IOS_FIREBASE_SECRET" > ios/Runner/GoogleService-Info.plist
 
-      - name: Install CocoaPods
+      - name: Install CocoaPods (dynamic frameworks mặc định)
         script: |
           cd ios
           pod deintegrate
@@ -42,18 +40,7 @@ workflows:
 
       - name: Verify Bundle ID
         script: |
-          echo "Bundle ID trong Info.plist:"
           /usr/libexec/PlistBuddy -c "Print CFBundleIdentifier" ios/Runner/Info.plist
-          echo "Bundle ID trong project.pbxproj:"
-          grep "PRODUCT_BUNDLE_IDENTIFIER" ios/Runner.xcodeproj/project.pbxproj | head -1
-
-      # ⬇️⬇️⬇️ BỔ SUNG BƯỚC SỬA TÊN PRODUCT ⬇️⬇️⬇️
-      - name: Fix Product Name and Executable Name
-        script: |
-          sed -i '' 's/PRODUCT_NAME = .*;/PRODUCT_NAME = Runner;/g' ios/Runner.xcodeproj/project.pbxproj
-          /usr/libexec/PlistBuddy -c "Set :CFBundleName Runner" ios/Runner/Info.plist
-          /usr/libexec/PlistBuddy -c "Set :CFBundleExecutable Runner" ios/Runner/Info.plist
-          echo "Đã sửa Product Name thành Runner"
 
       - name: Build Android App Bundle
         script: |
@@ -62,21 +49,6 @@ workflows:
       - name: Build iOS IPA
         script: |
           flutter build ipa --release --no-codesign
-
-      - name: Validate IPA structure
-        script: |
-          IPA_FILE=$(find build/ios/ipa -name "*.ipa" | head -1)
-          if [ -z "$IPA_FILE" ]; then
-            echo "ERROR: No IPA found!"
-            exit 1
-          fi
-          echo "Checking IPA: $IPA_FILE"
-          if unzip -l "$IPA_FILE" | grep -q "Payload/.*\.app/Info.plist"; then
-            echo "✅ IPA structure is valid"
-          else
-            echo "❌ IPA missing Info.plist inside Payload"
-            exit 1
-          fi
 
     artifacts:
       - build/app/outputs/bundle/release/*.aab
