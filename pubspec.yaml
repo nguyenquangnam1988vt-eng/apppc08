@@ -1,3 +1,12 @@
+name: app7
+description: A real-time location tracking application.
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.13.0 <4.0.0'
+
 dependencies:
   flutter:
     sdk: flutter
@@ -5,11 +14,9 @@ dependencies:
   flutter_map: ^8.3.2
   latlong2: ^0.10.1
   geolocator: ^14.0.2
-
   firebase_core: ^3.0.0
   firebase_database: ^11.0.0
   firebase_auth: ^5.0.0
-
   path_provider: ^2.1.5
 
 dev_dependencies:
@@ -19,3 +26,6 @@ dev_dependencies:
 
 dependency_overrides:
   path_provider_foundation: 2.5.1
+
+flutter:
+  uses-material-design: true
