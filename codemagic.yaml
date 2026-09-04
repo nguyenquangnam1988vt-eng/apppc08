@@ -5,71 +5,47 @@ workflows:
     environment:
       groups:
         - firebase_credentials
-
-      flutter: 3.47.2
-      xcode: 26.4
-      cocoapods: 1.16.2
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      # ⬇️⬇️⬇️ THÊM DÒNG NÀY ĐỂ TẮT SPM ⬇️⬇️⬇️
+      FLUTTER_USE_SWIFT_PACKAGE_MANAGER: false
 
     scripts:
-
       - name: Show build environment
         script: |
-          echo "===== FLUTTER ====="
           flutter --version
-
-          echo "===== DART ====="
-          dart --version
-
-          echo "===== XCODE ====="
           xcodebuild -version
-
-          echo "===== COCOAPODS ====="
           pod --version
-
-      - name: Check pubspec
-        script: |
-          echo "===== PUBSPEC ====="
-          cat pubspec.yaml
 
       - name: Clean and get dependencies
         script: |
           flutter clean
-          rm -rf ios/Pods
-          rm -rf ~/Library/Developer/Xcode/DerivedData/*
+          rm -rf ios/Pods ios/Podfile.lock
           flutter pub get
 
       - name: Create GoogleService-Info.plist
         script: |
-          printf '%s\n' "$IOS_FIREBASE_SECRET" \
-            > ios/Runner/GoogleService-Info.plist
+          printf '%s\n' "$IOS_FIREBASE_SECRET" > ios/Runner/GoogleService-Info.plist
+
+      # ⬇️⬇️⬇️ BƯỚC MỚI: XÓA PODFILE CŨ ⬇️⬇️⬇️
+      - name: Remove old Podfile (let Flutter regenerate)
+        script: |
+          rm -f ios/Podfile
+          echo "Đã xóa Podfile cũ, Flutter sẽ tạo mới khi build."
 
       - name: Install CocoaPods
         script: |
           cd ios
-          rm -rf Pods
+          pod deintegrate
+          rm -rf Pods Podfile.lock
           pod install --repo-update
           cd ..
-
-      - name: Verify Pods
-        script: |
-          echo "===== PATH PROVIDER FOUNDATION ====="
-          grep -A 5 -B 2 "path_provider_foundation" ios/Podfile.lock || true
-
-      - name: Verify Bundle ID
-        script: |
-          /usr/libexec/PlistBuddy \
-            -c "Print CFBundleIdentifier" \
-            ios/Runner/Info.plist
-
-      - name: Build Android App Bundle
-        script: |
-          flutter build appbundle --release
 
       - name: Build iOS IPA
         script: |
           flutter build ipa --release --no-codesign
 
     artifacts:
-      - build/app/outputs/bundle/release/*.aab
       - build/ios/ipa/*.ipa
       - build/ios/archive/Runner.xcarchive
