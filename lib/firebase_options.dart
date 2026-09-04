@@ -86,6 +86,6 @@ class DefaultFirebaseOptions {
     projectId: 'tuantrapc08',
     databaseURL: 'https://tuantrapc08-default-rtdb.firebaseio.com',
     storageBucket: 'tuantrapc08.firebasestorage.app',
-    iosBundleId: 'com.nguyenquangnam1988vt.locationtracker',
+    iosBundleId: 'com.nguyenquangnam1988vt.location',
   );
 }
