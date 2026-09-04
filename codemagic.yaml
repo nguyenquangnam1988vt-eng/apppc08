@@ -8,8 +8,6 @@ workflows:
       flutter: stable
       xcode: latest
       cocoapods: default
-      # ⬇️⬇️⬇️ THÊM DÒNG NÀY ĐỂ TẮT SPM ⬇️⬇️⬇️
-      FLUTTER_USE_SWIFT_PACKAGE_MANAGER: false
 
     scripts:
       - name: Show build environment
@@ -18,24 +16,24 @@ workflows:
           xcodebuild -version
           pod --version
 
-      - name: Clean and get dependencies
+      - name: Deep clean and prepare
         script: |
           flutter clean
-          rm -rf ios/Pods ios/Podfile.lock
+          rm -rf ios/Pods ios/Podfile.lock ios/.symlinks
+          rm -rf ios/Flutter/Flutter.podspec
           flutter pub get
 
       - name: Create GoogleService-Info.plist
         script: |
           printf '%s\n' "$IOS_FIREBASE_SECRET" > ios/Runner/GoogleService-Info.plist
 
-      # ⬇️⬇️⬇️ BƯỚC MỚI: XÓA PODFILE CŨ ⬇️⬇️⬇️
-      - name: Remove old Podfile (let Flutter regenerate)
+      - name: Use static Podfile (disable SPM)
         script: |
-          rm -f ios/Podfile
-          echo "Đã xóa Podfile cũ, Flutter sẽ tạo mới khi build."
-
-      - name: Install CocoaPods
-        script: |
+          # Đảm bảo Podfile đã tồn tại trong repo (không xóa nó)
+          # Nếu cần, có thể copy từ file mẫu
+          cp ios/Podfile ios/Podfile.bak  # backup
+          # Sửa lại nếu cần
+          sed -i '' 's/use_frameworks!/use_frameworks! :linkage => :static/g' ios/Podfile
           cd ios
           pod deintegrate
           rm -rf Pods Podfile.lock
