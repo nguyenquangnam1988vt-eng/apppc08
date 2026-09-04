@@ -43,8 +43,10 @@ workflows:
 
       - name: Create GoogleService-Info.plist
         script: |
-          printf '%s\n' "$IOS_FIREBASE_SECRET" \
-            > ios/Runner/GoogleService-Info.plist
+          echo "$IOS_FIREBASE_SECRET" | base64 --decode > ios/Runner/GoogleService-Info.plist
+
+          test -s ios/Runner/GoogleService-Info.plist
+          echo "GoogleService-Info.plist OK"
 
       - name: Install CocoaPods
         script: |
@@ -60,12 +62,14 @@ workflows:
       - name: Verify CocoaPods
         script: |
           echo "===== PODFILE.LOCK ====="
-          test -f ios/Podfile.lock && echo "Podfile.lock OK"
+          test -f ios/Podfile.lock
+          echo "Podfile.lock OK"
 
           echo "===== MANIFEST.LOCK ====="
-          test -f ios/Pods/Manifest.lock && echo "Manifest.lock OK"
+          test -f ios/Pods/Manifest.lock
+          echo "Manifest.lock OK"
 
-          echo "===== PATH PROVIDER ====="
+          echo "===== PATH PROVIDER FOUNDATION ====="
           grep -A 5 -B 2 "path_provider_foundation" ios/Podfile.lock || true
 
       - name: Build iOS IPA
