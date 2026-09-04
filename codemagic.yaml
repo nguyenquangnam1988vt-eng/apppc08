@@ -5,7 +5,6 @@ workflows:
     environment:
       groups:
         - firebase_credentials
-
       flutter: 3.35.7
       xcode: latest
       cocoapods: default
@@ -17,14 +16,14 @@ workflows:
           echo "===== FLUTTER ====="
           flutter --version
 
+          echo "===== DART ====="
+          dart --version
+
           echo "===== XCODE ====="
           xcodebuild -version
 
           echo "===== COCOAPODS ====="
           pod --version
-
-          echo "===== DART ====="
-          dart --version
 
       - name: Check pubspec
         script: |
@@ -35,21 +34,25 @@ workflows:
         script: |
           flutter clean
           rm -rf ios/Pods
-          rm -rf ios/Podfile.lock
           flutter pub get
 
       - name: Create GoogleService-Info.plist
         script: |
-          printf '%s\n' "$IOS_FIREBASE_SECRET" > ios/Runner/GoogleService-Info.plist
+          printf '%s\n' "$IOS_FIREBASE_SECRET" \
+            > ios/Runner/GoogleService-Info.plist
 
       - name: Install CocoaPods
         script: |
           cd ios
-          pod deintegrate
+          pod deintegrate || true
           rm -rf Pods
-          rm -rf Podfile.lock
           pod install --repo-update
           cd ..
+
+      - name: Verify Pods
+        script: |
+          echo "===== PATH PROVIDER FOUNDATION ====="
+          grep -A 5 -B 2 "path_provider_foundation" ios/Podfile.lock || true
 
       - name: Verify Bundle ID
         script: |
