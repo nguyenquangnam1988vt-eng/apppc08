@@ -14,16 +14,20 @@ dependencies:
   latlong2: ^0.10.1
   # Device Location
   geolocator: ^14.0.2
-  # Firebase Backend (Đồng bộ firebase_core lên v3.x và firebase_database lên v11.x để khớp với firebase_auth v5.x)
+  # Firebase Backend
   firebase_core: ^3.0.0
   firebase_database: ^11.0.0
   firebase_auth: ^5.0.0
-  path_provider: ^2.1.0
+  path_provider: ^2.1.0   # giữ nguyên dòng này
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+
+# ⬇️⬇️⬇️ THÊM PHẦN NÀY ⬇️⬇️⬇️
+dependency_overrides:
+  path_provider: 2.1.0   # ép đúng phiên bản, bất chấp yêu cầu của các package khác
 
 flutter:
   uses-material-design: true
