@@ -1,3 +1,6 @@
+# TẮT SWIFT PACKAGE MANAGER – ÉP DÙNG COCOAPODS
+$flutter_use_swift_package_manager = false   # ⬅️ THÊM DÒNG NÀY
+
 platform :ios, '15.0'
 
 use_frameworks! :linkage => :static
@@ -34,6 +37,9 @@ require File.expand_path(
 flutter_ios_podfile_setup
 
 target 'Runner' do
+  use_frameworks! :linkage => :static    # ⬅️ THÊM DÒNG NÀY (tuy đã có ở trên, nhưng để đảm bảo trong target)
+  use_modular_headers!                   # ⬅️ THÊM DÒNG NÀY (tránh xung đột header)
+
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
 
