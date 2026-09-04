@@ -1,30 +1,39 @@
 workflows:
-  ios-release:
-    name: iOS Release Build
+  release-build:
+    name: Release Build (iOS & Android)
     environment:
       groups:
         - firebase_credentials
       flutter: stable
       xcode: latest
+      cocoapods: default   # Giữ lại để CodeMagic tự cài CocoaPods
     scripts:
       - name: Clean and get dependencies
         script: |
           flutter clean
           flutter pub get
 
-      - name: Create GoogleService-Info.plist from secret
+      - name: Create GoogleService-Info.plist
         script: |
-          echo "$IOS_FIREBASE_SECRET" | base64 --decode > ios/Runner/GoogleService-Info.plist
+          printf '%s\n' "$IOS_FIREBASE_SECRET" > ios/Runner/GoogleService-Info.plist
 
-      - name: Install CocoaPods
+      - name: Reset and install CocoaPods
         script: |
           cd ios
+          pod deintegrate
+          rm -rf Pods Podfile.lock
           pod install --repo-update
+          cd ..
+
+      - name: Build Android App Bundle
+        script: |
+          flutter build appbundle --release
 
       - name: Build iOS IPA
         script: |
           flutter build ipa --release --no-codesign
 
     artifacts:
+      - build/app/outputs/bundle/release/*.aab
       - build/ios/ipa/*.ipa
       - build/ios/archive/Runner.xcarchive
