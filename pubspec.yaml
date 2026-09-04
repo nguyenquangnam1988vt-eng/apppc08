@@ -9,26 +9,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # UI & Map
   flutter_map: ^8.3.2
   latlong2: ^0.10.1
-  # Device Location
   geolocator: ^14.0.2
-  # Firebase Backend
   firebase_core: ^3.0.0
   firebase_database: ^11.0.0
   firebase_auth: ^5.0.0
-  path_provider: ^2.1.0   # giữ nguyên dòng này
+  path_provider: ^2.1.6   # Nâng cấp lên phiên bản mới nhất trong dòng 2.1.x
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
 
-# ⬇️⬇️⬇️ THÊM PHẦN NÀY ⬇️⬇️⬇️
-dependency_overrides:
-  path_provider: 2.1.0   # ép đúng phiên bản, bất chấp yêu cầu của các package khác
-  path_provider_foundation: 2.0.0
-
+# BỎ HOÀN TOÀN PHẦN dependency_overrides
 flutter:
   uses-material-design: true
