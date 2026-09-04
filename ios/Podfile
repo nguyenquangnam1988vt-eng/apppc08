@@ -1,8 +1,4 @@
-# TẮT SWIFT PACKAGE MANAGER – ÉP DÙNG COCOAPODS
-$flutter_use_swift_package_manager = false   # ⬅️ THÊM DÒNG NÀY
-
 platform :ios, '15.0'
-
 use_frameworks! :linkage => :static
 
 project 'Runner', {
@@ -12,11 +8,7 @@ project 'Runner', {
 }
 
 def flutter_root
-  generated_xcode_build_settings_path = File.expand_path(
-    File.join('..', 'Flutter', 'Generated.xcconfig'),
-    __FILE__
-  )
-
+  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
   unless File.exist?(generated_xcode_build_settings_path)
     raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure flutter pub get is executed first"
   end
@@ -25,20 +17,16 @@ def flutter_root
     matches = line.match(/FLUTTER_ROOT\=(.*)/)
     return matches[1].strip if matches
   end
-
-  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}."
+  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Generated.xcconfig, then run flutter pub get"
 end
 
-require File.expand_path(
-  File.join('packages', 'flutter_tools', 'bin', 'podhelper'),
-  flutter_root
-)
+require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
 
 flutter_ios_podfile_setup
 
 target 'Runner' do
-  use_frameworks! :linkage => :static    # ⬅️ THÊM DÒNG NÀY (tuy đã có ở trên, nhưng để đảm bảo trong target)
-  use_modular_headers!                   # ⬅️ THÊM DÒNG NÀY (tránh xung đột header)
+  use_frameworks! :linkage => :static
+  use_modular_headers!
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
@@ -46,7 +34,6 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
-
     target.build_configurations.each do |config|
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
     end
