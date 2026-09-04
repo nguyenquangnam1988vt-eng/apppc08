@@ -2,23 +2,66 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <!-- Các cấu hình mặc định của Flutter giữ nguyên ở đây... -->
+    <!-- === CÁC KEY BẮT BUỘC CỦA iOS === -->
+    <key>CFBundleDevelopmentRegion</key>
+    <string>$(DEVELOPMENT_LANGUAGE)</string>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.nguyenquangnam1988vt.location</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>$(PRODUCT_NAME)</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>$(MARKETING_VERSION)</string>
+    <key>CFBundleVersion</key>
+    <string>$(CURRENT_PROJECT_VERSION)</string>
+    <key>LSRequiresIPhoneOS</key>
+    <true/>
+    <key>UILaunchStoryboardName</key>
+    <string>LaunchScreen</string>
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationLandscapeLeft</string>
+        <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+    <key>UISupportedInterfaceOrientations~ipad</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationPortraitUpsideDown</string>
+        <string>UIInterfaceOrientationLandscapeLeft</string>
+        <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
 
-    <!-- 1. QUYỀN VỊ TRÍ KHI MỞ APP -->
+    <!-- === QUYỀN VỊ TRÍ === -->
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>Ứng dụng cần truy cập vị trí của bạn để hiển thị Marker trên bản đồ thời gian thực.</string>
-
-    <!-- 2. QUYỀN VỊ TRÍ KHI CHẠY NGẦM -->
     <key>NSLocationAlwaysUsageDescription</key>
     <string>Ứng dụng cần theo dõi vị trí trong nền để cập nhật liên tục cho những người dùng khác.</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
     <string>Ứng dụng cần quyền vị trí mọi lúc để theo dõi hành trình liên tục.</string>
 
-    <!-- 3. CẤU HÌNH CHO PHÉP APP HOẠT ĐỘNG BACKGROUND -->
+    <!-- === BACKGROUND MODE === -->
     <key>UIBackgroundModes</key>
     <array>
         <string>location</string>
         <string>fetch</string>
     </array>
+
+    <!-- === HỖ TRỢ TRUY CẬP FILE (CHO PATH_PROVIDER) === -->
+    <key>UIFileSharingEnabled</key>
+    <true/>
+    <key>LSSupportsOpeningDocumentsInPlace</key>
+    <true/>
+
+    <!-- === CÁC KEY PHỤ KHÁC === -->
+    <key>CADisableMinimumFrameDurationOnPhone</key>
+    <true/>
+    <key>UIApplicationSupportsIndirectInputEvents</key>
+    <true/>
 </dict>
 </plist>
