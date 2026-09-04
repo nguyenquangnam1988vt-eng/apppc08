@@ -15,13 +15,15 @@ dependencies:
   firebase_core: ^3.0.0
   firebase_database: ^11.0.0
   firebase_auth: ^5.0.0
-  path_provider: ^2.1.6   # Nâng cấp lên phiên bản mới nhất trong dòng 2.1.x
+  path_provider: ^2.1.5 # Nên dùng version mới nhất
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
 
-# BỎ HOÀN TOÀN PHẦN dependency_overrides
+dependency_overrides:
+  path_provider_foundation: 2.5.1 # Ghim chặt version ổn định này
+
 flutter:
   uses-material-design: true
