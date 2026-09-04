@@ -1,46 +1,61 @@
 workflows:
   release-build:
     name: Release Build (iOS & Android)
+
     environment:
       groups:
         - firebase_credentials
-      flutter: stable
+
+      flutter: 3.35.7
       xcode: latest
       cocoapods: default
 
     scripts:
+
       - name: Show build environment
         script: |
           echo "===== FLUTTER ====="
           flutter --version
+
           echo "===== XCODE ====="
           xcodebuild -version
+
           echo "===== COCOAPODS ====="
           pod --version
+
           echo "===== DART ====="
           dart --version
+
+      - name: Check pubspec
+        script: |
+          echo "===== PUBSPEC ====="
+          cat pubspec.yaml
 
       - name: Clean and get dependencies
         script: |
           flutter clean
-          rm -rf ios/Pods ios/Podfile.lock
+          rm -rf ios/Pods
+          rm -rf ios/Podfile.lock
           flutter pub get
 
       - name: Create GoogleService-Info.plist
         script: |
           printf '%s\n' "$IOS_FIREBASE_SECRET" > ios/Runner/GoogleService-Info.plist
 
-      - name: Install CocoaPods (dynamic frameworks mặc định)
+      - name: Install CocoaPods
         script: |
           cd ios
           pod deintegrate
-          rm -rf Pods Podfile.lock
+          rm -rf Pods
+          rm -rf Podfile.lock
           pod install --repo-update
           cd ..
 
       - name: Verify Bundle ID
         script: |
-          /usr/libexec/PlistBuddy -c "Print CFBundleIdentifier" ios/Runner/Info.plist
+          /usr/libexec/PlistBuddy \
+            -c "Print CFBundleIdentifier" \
+            ios/Runner/Info.plist
 
       - name: Build Android App Bundle
         script: |
