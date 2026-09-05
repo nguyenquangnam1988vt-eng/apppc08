@@ -10,10 +10,6 @@ workflows:
       xcode: 26.4
       cocoapods: 1.16.2
 
-      ios_signing:
-        distribution_type: development
-        bundle_identifier: com.nguyenquangnam1988vt.location
-
     scripts:
 
       - name: Show build environment
@@ -32,7 +28,10 @@ workflows:
 
       - name: Deep clean
         script: |
+          set -e
+
           flutter clean
+
           rm -rf ios/Pods
           rm -f ios/Podfile.lock
           rm -rf ios/.symlinks
@@ -41,32 +40,54 @@ workflows:
 
       - name: Get Flutter dependencies
         script: |
+          set -e
+
           flutter pub get
 
       - name: Create GoogleService-Info.plist
         script: |
+          set -e
+
           echo "$IOS_FIREBASE_SECRET" | base64 --decode > ios/Runner/GoogleService-Info.plist
 
           test -s ios/Runner/GoogleService-Info.plist
 
           echo "GoogleService-Info.plist OK"
+          ls -lh ios/Runner/GoogleService-Info.plist
+
+      - name: Verify Firebase plist
+        script: |
+          set -e
+
+          PLIST="ios/Runner/GoogleService-Info.plist"
+
+          test -f "$PLIST"
+
+          echo "===== FIREBASE PLIST ====="
+
+          /usr/libexec/PlistBuddy -c "Print :BUNDLE_ID" "$PLIST" || true
+          /usr/libexec/PlistBuddy -c "Print :PROJECT_ID" "$PLIST" || true
+          /usr/libexec/PlistBuddy -c "Print :GOOGLE_APP_ID" "$PLIST" || true
+
+          echo "Firebase plist verification completed."
 
       - name: Install CocoaPods
         script: |
+          set -e
+
           cd ios
+
+          rm -rf Pods
+          rm -f Podfile.lock
+
           pod install --repo-update
+
           cd ..
-
-      - name: Verify Firebase
-        script: |
-          echo "===== FIREBASE FILE ====="
-          ls -lh ios/Runner/GoogleService-Info.plist
-
-          echo "===== FIREBASE BUNDLE ID ====="
-          grep -A 1 "BUNDLE_ID" ios/Runner/GoogleService-Info.plist || true
 
       - name: Verify CocoaPods
         script: |
+          set -e
+
           echo "===== PODFILE.LOCK ====="
           test -f ios/Podfile.lock
           echo "Podfile.lock OK"
@@ -78,10 +99,92 @@ workflows:
           echo "===== PATH PROVIDER FOUNDATION ====="
           grep -A 5 -B 2 "path_provider_foundation" ios/Podfile.lock || true
 
-      - name: Build iOS IPA
+      - name: Build unsigned iOS archive
         script: |
-          flutter build ipa --release
+          set -e
+
+          flutter build ipa --release --no-codesign
+
+      - name: Verify XCArchive
+        script: |
+          set -e
+
+          ARCHIVE="build/ios/archive/Runner.xcarchive"
+          APP="$ARCHIVE/Products/Applications/Runner.app"
+
+          echo "===== XCARCHIVE ====="
+          test -d "$ARCHIVE"
+          echo "XCArchive OK"
+
+          echo "===== RUNNER.APP ====="
+          test -d "$APP"
+          echo "Runner.app OK"
+
+          echo "===== APP SIZE ====="
+          du -sh "$APP"
+
+          echo "===== FRAMEWORKS ====="
+          ls -lah "$APP/Frameworks" || true
+
+          echo "===== FIREBASE PLIST INSIDE APP ====="
+          if [ -f "$APP/GoogleService-Info.plist" ]; then
+            echo "GoogleService-Info.plist FOUND inside Runner.app"
+            ls -lh "$APP/GoogleService-Info.plist"
+          else
+            echo "WARNING: GoogleService-Info.plist NOT found inside Runner.app"
+          fi
+
+      - name: Create unsigned IPA for Sideloadly
+        script: |
+          set -e
+
+          ARCHIVE_APP="build/ios/archive/Runner.xcarchive/Products/Applications/Runner.app"
+          IPA_DIR="build/ios/ipa"
+          PAYLOAD_DIR="build/ios/Payload"
+
+          echo "===== PREPARE IPA ====="
+
+          test -d "$ARCHIVE_APP"
+
+          rm -rf "$IPA_DIR"
+          rm -rf "$PAYLOAD_DIR"
+
+          mkdir -p "$IPA_DIR"
+          mkdir -p "$PAYLOAD_DIR"
+
+          cp -R "$ARCHIVE_APP" "$PAYLOAD_DIR/Runner.app"
+
+          echo "===== CREATE IPA ====="
+
+          cd build/ios
+
+          /usr/bin/zip -qry \
+            "ipa/Runner-unsigned.ipa" \
+            Payload
+
+          cd ../..
+
+          echo "===== IPA CREATED ====="
+
+          test -f "build/ios/ipa/Runner-unsigned.ipa"
+
+          ls -lh "build/ios/ipa/Runner-unsigned.ipa"
+
+      - name: Verify unsigned IPA
+        script: |
+          set -e
+
+          IPA="build/ios/ipa/Runner-unsigned.ipa"
+
+          echo "===== IPA ====="
+          test -f "$IPA"
+
+          echo "IPA OK:"
+          ls -lh "$IPA"
+
+          echo "===== IPA CONTENT ====="
+          unzip -l "$IPA" | head -40
 
     artifacts:
-      - build/ios/ipa/*.ipa
+      - build/ios/ipa/Runner-unsigned.ipa
       - build/ios/archive/Runner.xcarchive
