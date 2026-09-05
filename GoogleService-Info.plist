@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.nguyenquangnam1988vt.locationtracker</string>
+	<string>com.nguyenquangnam1988vt.location</string>
 	<key>PROJECT_ID</key>
 	<string>tuantrapc08</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,7 +25,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1028882250122:ios:ad0879d5e53161c21d7073</string>
+	<string>1:1028882250122:ios:0d861f33cbb9499c1d7073</string>
 	<key>DATABASE_URL</key>
 	<string>https://tuantrapc08-default-rtdb.firebaseio.com</string>
 </dict>
