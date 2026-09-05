@@ -42,7 +42,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyDu6b31T_Qg4zmHQh1H_DJuOK_3nLyK1YM',
-    appId: '1:1028882250122:web:2356175de4fa8e4e1d7073',
+    appId: '1:1028882250122:ios:0d861f33cbb9499c1d7073',
     messagingSenderId: '1028882250122',
     projectId: 'tuantrapc08',
     authDomain: 'tuantrapc08.firebaseapp.com',
@@ -53,7 +53,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAWl-igoiwfP8PWF1Aw0jJQVrX9Q8a_cjw',
-    appId: '1:1028882250122:android:551b2d705d06778b1d7073',
+    appId: '1:1028882250122:ios:0d861f33cbb9499c1d7073',
     messagingSenderId: '1028882250122',
     projectId: 'tuantrapc08',
     databaseURL: 'https://tuantrapc08-default-rtdb.firebaseio.com',
@@ -61,7 +61,7 @@ class DefaultFirebaseOptions {
   );
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyDMezCXsvTRV5c4LejdoYNinseDRoWBt2w',
-    appId: '1:1028882250122:ios:2772ef71e14812af1d7073',
+    appId: '1:1028882250122:ios:0d861f33cbb9499c1d7073',
     messagingSenderId: '1028882250122',
     projectId: 'tuantrapc08',
     databaseURL: 'https://tuantrapc08-default-rtdb.firebaseio.com',
@@ -71,7 +71,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions windows = FirebaseOptions(
     apiKey: 'AIzaSyDu6b31T_Qg4zmHQh1H_DJuOK_3nLyK1YM',
-    appId: '1:1028882250122:web:c206c1b91b561cdd1d7073',
+    appId: '1:1028882250122:ios:0d861f33cbb9499c1d7073',
     messagingSenderId: '1028882250122',
     projectId: 'tuantrapc08',
     authDomain: 'tuantrapc08.firebaseapp.com',
@@ -81,7 +81,7 @@ class DefaultFirebaseOptions {
   );
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDMezCXsvTRV5c4LejdoYNinseDRoWBt2w',
-    appId: '1:1028882250122:ios:ad0879d5e53161c21d7073',
+    appId: '1:1028882250122:ios:0d861f33cbb9499c1d7073',
     messagingSenderId: '1028882250122',
     projectId: 'tuantrapc08',
     databaseURL: 'https://tuantrapc08-default-rtdb.firebaseio.com',
