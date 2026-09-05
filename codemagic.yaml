@@ -5,7 +5,6 @@ workflows:
     environment:
       groups:
         - firebase_credentials
-
       flutter: 3.47.2
       xcode: 26.4
       cocoapods: 1.16.2
@@ -16,13 +15,10 @@ workflows:
         script: |
           echo "===== FLUTTER ====="
           flutter --version
-
           echo "===== DART ====="
           dart --version
-
           echo "===== XCODE ====="
           xcodebuild -version
-
           echo "===== COCOAPODS ====="
           pod --version
 
@@ -56,20 +52,25 @@ workflows:
       - name: Verify CocoaPods
         script: |
           echo "===== PODFILE.LOCK ====="
-          test -f ios/Podfile.lock
-          echo "Podfile.lock OK"
-
+          test -f ios/Podfile.lock && echo "Podfile.lock OK" || echo "Podfile.lock MISSING"
           echo "===== MANIFEST.LOCK ====="
-          test -f ios/Pods/Manifest.lock
-          echo "Manifest.lock OK"
-
-          echo "===== PATH PROVIDER FOUNDATION ====="
+          test -f ios/Pods/Manifest.lock && echo "Manifest.lock OK" || echo "Manifest.lock MISSING"
           grep -A 5 -B 2 "path_provider_foundation" ios/Podfile.lock || true
 
-      - name: Build iOS IPA
+      - name: Build iOS App (without code signing)
         script: |
-          flutter build ipa --release --no-codesign
+          export CODE_SIGNING_REQUIRED=NO
+          export CODE_SIGNING_ALLOWED=NO
+          flutter build ios --release
+
+      - name: Create IPA from .app bundle
+        script: |
+          mkdir -p build/ios/ipa
+          cd build/ios/iphoneos
+          mkdir Payload
+          cp -R Runner.app Payload/
+          zip -r ../ipa/Runner.ipa Payload
+          cd ../../..
 
     artifacts:
       - build/ios/ipa/*.ipa
-      - build/ios/archive/Runner.xcarchive
